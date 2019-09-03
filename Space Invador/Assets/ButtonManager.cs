@@ -27,7 +27,8 @@ public class ButtonManager : MonoBehaviour
     {
         if (CorrectChoice == true)
         {
-            QM.ActivateSetQuestion();
+            QM.Correct();
+            QM.ActivateSetQuestion(-1);
         } else { QM.Wrong();}
     }
 }

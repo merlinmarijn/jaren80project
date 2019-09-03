@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 using UnityEditor;
+using UnityEngine.SceneManagement;
 
 public class QuizManager : MonoBehaviour
 {
@@ -24,12 +25,15 @@ public class QuizManager : MonoBehaviour
     public string[] Question9;
     public string[] Question10;
     private int CurrentQuestionID;
-    private int currentarraycount;
+    private int EmptyQuestions;
+    public GameObject fade;
+    public Animator anim;
+    public Image black;
 
     private void Start()
     {
-        int getQuestion = Random.RandomRange(0, 9);
-        ActivateSetQuestion();
+        int getQuestion = Random.Range(0, 9);
+        ActivateSetQuestion(-1);
     }
 
 
@@ -41,42 +45,51 @@ public class QuizManager : MonoBehaviour
 
     public void Correct()
     {
+        Question[CurrentQuestionID] = null;
         Score++;
-        Debug.Log("Correct");
-        Debug.Log(Score);
         if (Score == 5)
         {
             Debug.Log("You've Won");
         }
-        currentarraycount++;
     }
     public void Wrong()
     {
         Debug.Log("to bad");
     }
 
-    public void ActivateSetQuestion()
+    public void ActivateSetQuestion(int q)
     {
-        int getQuestion = Random.RandomRange(0, 9);
-        Debug.Log(getQuestion);
-        if (getQuestion == 0) { SetQuestion(0, Question1); }
-        else if (getQuestion == 1) { SetQuestion(1, Question2); }
-        else if (getQuestion == 2) { SetQuestion(2, Question3); }
-        else if (getQuestion == 3) { SetQuestion(3, Question4); }
-        else if (getQuestion == 4) { SetQuestion(4, Question5); }
-        else if (getQuestion == 5) { SetQuestion(5, Question6); }
-        else if (getQuestion == 6) { SetQuestion(6, Question7); }
-        else if (getQuestion == 7) { SetQuestion(7, Question8); }
-        else if (getQuestion == 8) { SetQuestion(8, Question9); }
-        else if (getQuestion == 9) { SetQuestion(9, Question10); }
-    }
+        foreach(string item in Question)
+        {
+            if (item == null)
+            {
+                EmptyQuestions++;
+                Debug.Log(EmptyQuestions);
+            }
+        }
+        if (EmptyQuestions != 8)
+        {
+            EmptyQuestions = 0;
+            int getQuestion = Random.Range(0, 9);
+            if (getQuestion == 0) { SetQuestion(0, Question1); }
+            else if (getQuestion == 1) { SetQuestion(1, Question2); }
+            else if (getQuestion == 2) { SetQuestion(2, Question3); }
+            else if (getQuestion == 3) { SetQuestion(3, Question4); }
+            else if (getQuestion == 4) { SetQuestion(4, Question5); }
+            else if (getQuestion == 5) { SetQuestion(5, Question6); }
+            else if (getQuestion == 6) { SetQuestion(6, Question7); }
+            else if (getQuestion == 7) { SetQuestion(7, Question8); }
+            else if (getQuestion == 8) { SetQuestion(8, Question9); }
+            else if (getQuestion == 9) { SetQuestion(9, Question10); }
+            EmptyQuestions = 0;
+        }
+        else { fade.SetActive(true); StartCoroutine(Fading()); } }
     void SetQuestion(int q, string[] AText)
     {
         if (Question[q] != null)
         {
-            Debug.Log(q + "  " + AText);
             QuestionText.GetComponentInChildren<Text>().text = Question[q];
-            int randomizer = Random.RandomRange(1, 90);
+            int randomizer = Random.Range(1, 90);
             if (randomizer >=1 && randomizer<=30)
             {
                 int reset = 0;
@@ -128,16 +141,15 @@ public class QuizManager : MonoBehaviour
                 }
 
             }
-            Question[q] = null;
-        } else { ActivateSetQuestion(); }
+            CurrentQuestionID = q;
+        } else { ActivateSetQuestion(CurrentQuestionID); }
     }
 
-
-    void ReadFile(string FN)
+    IEnumerator Fading()
     {
-        string path = "Assets/Resources/" + FN + ".txt";
-        StreamReader reader = new StreamReader(path);
-        Debug.Log(reader.ReadToEnd());
-        reader.Close();
+        anim.SetBool("Fade", true);
+        yield return new WaitUntil(() => black.color.a == 1);
+        SceneManager.LoadScene("win");
     }
+
 }
