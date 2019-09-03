@@ -89,11 +89,11 @@ public class QuizManager : MonoBehaviour
         if (Question[q] != null)
         {
             QuestionText.GetComponentInChildren<Text>().text = Question[q];
-            int randomizer = Random.Range(1, 90);
-            if (randomizer >=1 && randomizer<=30)
+            int randomizer = Random.Range(1, 3);
+            if (randomizer ==1)
             {
                 int reset = 0;
-                int count = 2;
+                int count = 1;
                 foreach (Button item in buttons)
                 {
                     if (count >= 3) { count = reset; }
@@ -107,7 +107,7 @@ public class QuizManager : MonoBehaviour
                 count = reset;
                 //if randomizer = 2 offset
             }
-            else if (randomizer >=31 && randomizer<=60)
+            else if (randomizer ==2)
             {
                 int reset = 0;
                 int count = 2;
@@ -125,10 +125,10 @@ public class QuizManager : MonoBehaviour
 
             }
             //if randomizer = 3 offset
-            else if (randomizer >=61 && randomizer<=90)
+            else if (randomizer ==3)
             {
                 int reset = 0;
-                int count = 2;
+                int count = 3;
                 foreach (Button item in buttons)
                 {
                     if (count >= 3) { count = reset; }
