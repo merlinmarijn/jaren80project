@@ -29,6 +29,8 @@ public class QuizManager : MonoBehaviour
     public GameObject fade;
     public Animator anim;
     public Image black;
+    public Animator Thumbsup;
+    public Animator ThumbsDown;
 
     private void Start()
     {
@@ -45,26 +47,32 @@ public class QuizManager : MonoBehaviour
 
     public void Correct()
     {
+        Thumbsup.Play("Thumbs_up");
         Question[CurrentQuestionID] = null;
         Score++;
         if (Score == 5)
         {
-            Debug.Log("You've Won");
+            //Debug.Log("You've Won");
         }
     }
     public void Wrong()
     {
-        Debug.Log("to bad");
+        //Debug.Log("to bad");
+        ThumbsDown.Play("Thumbs_Down");
     }
 
     public void ActivateSetQuestion(int q)
     {
-        foreach(string item in Question)
+        foreach (Button item in buttons)
+        {
+            item.GetComponentInChildren<ButtonManager>().CorrectChoice = false;
+        }
+        foreach (string item in Question)
         {
             if (item == null)
             {
                 EmptyQuestions++;
-                Debug.Log(EmptyQuestions);
+                //Debug.Log(EmptyQuestions);
             }
         }
         if (EmptyQuestions != 8)
